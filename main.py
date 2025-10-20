@@ -40,28 +40,3 @@ for col in numeric_columns:
 print("\n Non-Numerical (Categorical) Columns:")
 for col in non_numeric_columns:
     print(" -", col)
-
-
-
-# Standardize numeric columns
-
-
-# scaler = StandardScaler()
-# df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
-
-# SQL exploratory queries
-pysqldf = lambda q: sqldf(q, globals())
-query1 = """
-SELECT region_1, AVG(credit_amount) AS avg_credit
-FROM df
-GROUP BY region_1
-"""
-result1 = pysqldf(query1)
-print(result1)
-
-plt.bar(result1['region_1'], result1['avg_credit'])
-plt.title('Average Credit Amount by Region')
-plt.xlabel('Regions 1 and 2')
-plt.ylabel('Average Credit Amount')
-plt.show()
-
