@@ -1,6 +1,8 @@
 import openml
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+from pandasql import sqldf
+import matplotlib.pyplot as plt
 dataset = openml.datasets.get_dataset(46938)
 df, *_ = dataset.get_data()
 
@@ -33,5 +35,21 @@ print("\n Non-Numerical (Categorical) Columns:")
 for col in non_numeric_columns:
     print(" -", col)
 
-scaler = StandardScaler()
-df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
+# scaler = StandardScaler()
+# df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
+
+# SQL exploratory queries
+pysqldf = lambda q: sqldf(q, globals())
+query1 = """
+SELECT region_1, AVG(credit_amount) AS avg_credit
+FROM df
+GROUP BY region_1
+"""
+result1 = pysqldf(query1)
+print(result1)
+
+plt.bar(result1['region_1'], result1['avg_credit'])
+plt.title('Average Credit Amount by Region')
+plt.xlabel('Regions 1 and 2')
+plt.ylabel('Average Credit Amount')
+plt.show()
