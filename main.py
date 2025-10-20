@@ -21,11 +21,17 @@ print(f"Duplicates found: {duplicates}")
 df = pd.get_dummies(df, drop_first=True)
 print(df.head())
 
-# Select numeric columns (int or float)
-numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+
+# Select numeric columns (int or float)  #there are also uint8 and category types after get_dummies
+numeric_columns = df.select_dtypes(include=['int64', 'float64','uint8','category']).columns.tolist()
 
 # Select non-numeric columns 
-non_numeric_columns = df.select_dtypes(exclude=['int64', 'float64']).columns.tolist()
+non_numeric_columns = df.select_dtypes(exclude=['int64', 'float64','uint8','category']).columns.tolist()
+
+# Convert all numeric columns to int64
+df= df.astype(int)
+
+print(df.info)
 
 print(" Numerical Columns:")
 for col in numeric_columns:
@@ -34,6 +40,11 @@ for col in numeric_columns:
 print("\n Non-Numerical (Categorical) Columns:")
 for col in non_numeric_columns:
     print(" -", col)
+
+
+
+# Standardize numeric columns
+
 
 # scaler = StandardScaler()
 # df[numeric_columns] = scaler.fit_transform(df[numeric_columns])
@@ -53,3 +64,4 @@ plt.title('Average Credit Amount by Region')
 plt.xlabel('Regions 1 and 2')
 plt.ylabel('Average Credit Amount')
 plt.show()
+
