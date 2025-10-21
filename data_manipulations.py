@@ -1,9 +1,6 @@
 """
 Module for processing raw data from users.
 """
-"""
-Module for processing raw data from users.
-"""
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
