@@ -2,8 +2,6 @@ import streamlit as st
 import data_manipulations as dm
 import sql_queries as sqr
 
-st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
-
 
 st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
 
@@ -44,7 +42,7 @@ with st.form("user_input_form"):
     st.header("Family & Contact Information")
     
     family_status = st.selectbox("Family Status:", 
-                               options=["Married", "Another"])
+                               options=["Married","Unmarried", "Another"])
     
     having_children_flg = st.radio("Having Children:", 
                                  options=[1, 0], 
@@ -102,4 +100,3 @@ with st.form("user_input_form"):
     submit_button = st.form_submit_button(label="Predict Loyalty")
     
     
-
