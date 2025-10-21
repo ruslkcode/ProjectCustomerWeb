@@ -2,42 +2,104 @@ import streamlit as st
 import data_manipulations as dm
 import sql_queries as sqr
 
-st.markdown(
-    """
-    <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url("https://www.president.gov.ua/storage/j-image-storage/26/99/93/a9a3ae3a53660b2fa48bd1c22457429d_1661239081_extra_large.jpeg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    [data-testid="stHeader"] {
-        background: rgba(0, 0, 0, 0);
-    }
-
-    [data-testid="stToolbar"] {
-        right: 2rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-def show_image():
-    st.image("https://substackcdn.com/image/fetch/$s_!qXa6!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcb9540fa-b3b5-4790-9f8b-ae50925b6915_1920x1080.jpeg")
+st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
 
 
-st.image("https://www.utwente.nl/logo-stacked.png")
-st.image("https://www.designyourway.net/blog/wp-content/uploads/2019/11/Mercedes-Benz-logo-cover-1280x720-1.jpg")
-st.title("Welcome to the Streamlit App where we predict customer loyalty")
+st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
+
+
+st.title("Welcome to the Streamlit App")
+st.subheader("where we predict customer loyalty")
+st.markdown("---")
+
+
 with st.form("user_input_form"):
-    age = st.number_input("Enter Age:", min_value=18, max_value=100, value=30)
-    income = st.number_input("Enter Annual Income (in USD):", min_value=1000, max_value=1000000, value=50000)
-    credit_amount = st.number_input("Enter your Credit Amount:", min_value=1000, max_value=500000, value=5000)
-    sex = st.radio("Select Gender:", options=["Male", "Female"], index=0)
-    fam_stats = st.selectbox("Select Family Status:", options=["Married", "Another"], index=0)
-    spending_score = st.number_input("Enter Spending Score (1-100):", min_value=1, max_value=100, value=50)
-    submit_button = st.form_submit_button(label="Predict Loyalty", on_click = show_image)
+    st.header("Personal Information")
+    
+    age = st.number_input("Age:", min_value=18, max_value=100, value=30, step=1)
+    sex = st.radio("Sex:", options=["male", "female"], index=0)
+    education = st.selectbox("Education:", 
+                           options=["Higher education", "Secondary special education","Secondary education", "Other"])
+    
+    st.header("Financial Information")
+    
+    income = st.number_input("Annual Income (USD):", 
+                           min_value=1000, 
+                           max_value=500000, 
+                           value=50000, 
+                           step=1000)
+    
+    credit_amount = st.number_input("Credit Amount:", 
+                                  min_value=1000, 
+                                  max_value=500000, 
+                                  value=5000, 
+                                  step=1000)
+    
+    credit_term = st.number_input("Credit Term (months):", 
+                                min_value=1, 
+                                max_value=60, 
+                                value=12, 
+                                step=1)
+    
+    st.header("Family & Contact Information")
+    
+    family_status = st.selectbox("Family Status:", 
+                               options=["Married", "Another"])
+    
+    having_children_flg = st.radio("Having Children:", 
+                                 options=[1, 0], 
+                                 format_func=lambda x: "Yes" if x == 1 else "No")
+    
+    region = st.number_input("Region:", 
+                           min_value=1, 
+                           max_value=10, 
+                           value=2, 
+                           step=1)
+    
+    phone_operator = st.number_input("Phone Operator:", 
+                                   min_value=1, 
+                                   max_value=5, 
+                                   value=1, 
+                                   step=1)
+    
+    st.header("Product & Behavioral Information")
+    
+    product_type = st.selectbox("Product Type:", 
+                              options=["Household appliances",
+                                       "Cell phones",
+                                       "Computers",
+                                       "Furniture",
+                                       "Tourism",
+                                       "Construction Materials",
+                                       "Jewelry",
+                                       "Windows & Doors",
+                                       "Clothing",
+                                       "Auto",
+                                       "Audio & Video",
+                                       "Fitness",
+                                       "Training",
+                                       "Cosmetics and beauty services",
+                                       "Music",
+                                       "Sporting goods",
+                                       "Fishing and hunting supplies",
+                                       "Repair Services",
+                                       "Boats",
+                                       "Childrens' goods",
+                                       "Other products"])
+
+    
+    month = st.number_input("Month:", 
+                          min_value=1, 
+                          max_value=12, 
+                          value=3, 
+                          step=1)
+    
+    is_client = st.radio("Is Client:", 
+                       options=[1, 0], 
+                       format_func=lambda x: "Yes" if x == 1 else "No",
+                       index=1)
+    
+    submit_button = st.form_submit_button(label="Predict Loyalty")
     
     
 
