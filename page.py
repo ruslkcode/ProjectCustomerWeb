@@ -1,6 +1,5 @@
 import streamlit as st
 import data_manipulations as dm
-import sql_queries as sqr
 
 
 st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
