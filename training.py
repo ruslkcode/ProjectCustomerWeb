@@ -1,8 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import f1_score, roc_auc_score, average_precision_score
+from sklearn.metrics import f1_score, roc_auc_score, average_precision_score, accuracy_score
 import openml
-from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 import joblib
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
