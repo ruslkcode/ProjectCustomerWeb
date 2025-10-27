@@ -2,53 +2,49 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import f1_score, roc_auc_score, average_precision_score
 import openml
-from data_manipulations import data_manipulation
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 import joblib
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.pipeline import Pipeline
+
 
 dataset = openml.datasets.get_dataset(46938)
 df, *_ = dataset.get_data()
-data_train = data_manipulation(df)
-y = data_train['bad_client_target_Yes']
-X = data_train.drop(labels = 'bad_client_target_Yes', axis=1,)
+print(df.columns.tolist())
+y = df['bad_client_target'].map({'Yes': 1, 'No': 0})
+X = df.drop(labels = 'bad_client_target', axis=1,)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, train_size = 0.8, random_state = 42)
 
-model = KNeighborsClassifier(
-    n_neighbors = 5,
-    weights= 'distance',
-    algorithm = 'auto',
-    leaf_size = 30,
-    p = 2,
-    metric='minkowski',    
+categorical_features = ['sex', 'education', 'family_status', 'product_type', 'is_client', 'having_children_flg']
+numeric_features = [col for col in X.columns if col not in categorical_features]
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', StandardScaler(), numeric_features),
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features)
+    ]
 )
 
-model_trained = model.fit(X_train, y_train)
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', KNeighborsClassifier(
+        n_neighbors = 5,
+        weights= 'distance',
+        algorithm = 'auto',
+        leaf_size = 30,
+        p = 2,
+        metric='minkowski', ))
+])
 
-prediction = model.predict(X_test)
 
-y_true = y_test
-y_score = model.predict_proba(X_test)[:, 1]
-roc = roc_auc_score(
-    y_true,
-    y_score
-)
-threshold = 0.1
-y_pred = (y_score > threshold).astype(int)
-
-f1 = f1_score(
-    y_true,
-    y_pred
-
-)
-accuracy = accuracy_score(y_true, y_pred)
-pr_auc = average_precision_score(y_true, y_score)
 
 grid = GridSearchCV(
-    estimator=model,
+    estimator=pipeline,
     param_grid={
-        'n_neighbors': [3, 6, 7, 8, 9],
-        'weights': ['uniform', 'distance'],
-        'metric': ['euclidean', 'manhattan']
+        'classifier__n_neighbors': [3, 6, 7, 8, 9],
+        'classifier__weights': ['uniform', 'distance'],
+        'classifier__metric': ['euclidean', 'manhattan']
     },
     scoring={
         'F1': 'f1',
@@ -59,10 +55,10 @@ grid = GridSearchCV(
 )
 
 grid.fit(X_train, y_train)
-best_model = grid.best_estimator_
+best_pipeline = grid.best_estimator_
 
 y_true = y_test
-y_score = best_model.predict_proba(X_test)[:, 1]
+y_score = best_pipeline.predict_proba(X_test)[:, 1]
 roc = roc_auc_score(
     y_true,
     y_score
@@ -86,4 +82,4 @@ print("Best model F1-score:", f1)
 print("Best model Accuracy:", accuracy)
 print("Best model PR AUC:", pr_auc)
 
-joblib.dump(best_model, "best_knn_model.joblib")
+joblib.dump(best_pipeline, "best_knn_pipeline.joblib")

@@ -1,5 +1,9 @@
 import streamlit as st
-import data_manipulations as dm
+import joblib
+import numpy as np
+import pandas as pd
+
+model = joblib.load("best_knn_pipeline.joblib")
 
 
 st.set_page_config(page_title="Customer Loyalty Predictor", page_icon="📊")
@@ -99,3 +103,34 @@ with st.form("user_input_form"):
     submit_button = st.form_submit_button(label="Predict Loyalty")
     
     
+if submit_button:
+    
+    input_df = pd.DataFrame([{
+        "age": age,
+        "sex": sex,
+        "education": education,
+        "income": income,
+        "credit_amount": credit_amount,
+        "credit_term": credit_term,
+        "family_status": family_status,
+        "having_children_flg": having_children_flg,
+        "region": region,
+        "phone_operator": phone_operator,
+        "product_type": product_type,
+        "month": month,
+        "is_client": is_client
+    }])
+    
+    categorical_cols = ['sex', 'education', 'family_status', 'product_type', 'is_client', 'having_children_flg']
+    for col in categorical_cols:
+        input_df[col] = input_df[col].astype(str)
+        
+    numeric_cols = ['age', 'income', 'credit_amount', 'credit_term', 'region', 'phone_operator', 'month']
+    for col in numeric_cols:
+        input_df[col] = input_df[col].astype(float)
+    
+    prediction_proba = model.predict_proba(input_df)[0][1]
+    prediction = "Bad Client" if prediction_proba > 0.25 else "Loyal Client"
+    
+    
+    st.markdown(f"## Prediction Result: **{prediction}**")
