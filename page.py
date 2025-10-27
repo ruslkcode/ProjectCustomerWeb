@@ -18,7 +18,6 @@ with st.form("user_input_form"):
     st.header("Personal Information")
     
     age = st.number_input("Age:", min_value=18, max_value=100, value=30, step=1)
-    sex = st.radio("Sex:", options=["male", "female"], index=0)
     education = st.selectbox("Education:", 
                            options=["Higher education", "Secondary special education","Secondary education", "Other"])
     
@@ -44,24 +43,11 @@ with st.form("user_input_form"):
     
     st.header("Family & Contact Information")
     
-    family_status = st.selectbox("Family Status:", 
-                               options=["Married","Unmarried", "Another"])
     
     having_children_flg = st.radio("Having Children:", 
                                  options=[1, 0], 
                                  format_func=lambda x: "Yes" if x == 1 else "No")
     
-    region = st.number_input("Region:", 
-                           min_value=1, 
-                           max_value=10, 
-                           value=2, 
-                           step=1)
-    
-    phone_operator = st.number_input("Phone Operator:", 
-                                   min_value=1, 
-                                   max_value=5, 
-                                   value=1, 
-                                   step=1)
     
     st.header("Product & Behavioral Information")
     
@@ -88,13 +74,7 @@ with st.form("user_input_form"):
                                        "Childrens' goods",
                                        "Other products"])
 
-    
-    month = st.number_input("Month:", 
-                          min_value=1, 
-                          max_value=12, 
-                          value=3, 
-                          step=1)
-    
+
     is_client = st.radio("Is Client:", 
                        options=[1, 0], 
                        format_func=lambda x: "Yes" if x == 1 else "No",
@@ -107,25 +87,20 @@ if submit_button:
     
     input_df = pd.DataFrame([{
         "age": age,
-        "sex": sex,
         "education": education,
         "income": income,
         "credit_amount": credit_amount,
         "credit_term": credit_term,
-        "family_status": family_status,
         "having_children_flg": having_children_flg,
-        "region": region,
-        "phone_operator": phone_operator,
         "product_type": product_type,
-        "month": month,
         "is_client": is_client
     }])
     
-    categorical_cols = ['sex', 'education', 'family_status', 'product_type', 'is_client', 'having_children_flg']
+    categorical_cols = ['education', 'product_type', 'is_client', 'having_children_flg']
     for col in categorical_cols:
         input_df[col] = input_df[col].astype(str)
         
-    numeric_cols = ['age', 'income', 'credit_amount', 'credit_term', 'region', 'phone_operator', 'month']
+    numeric_cols = ['age', 'income', 'credit_amount', 'credit_term']
     for col in numeric_cols:
         input_df[col] = input_df[col].astype(float)
     
