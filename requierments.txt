@@ -1,0 +1,10 @@
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.2
+openml>=0.13
+joblib>=1.2
+streamlit>=1.20
+imbalanced-learn>=0.11
+matplotlib>=3.6
+pandasql>=0.7
