@@ -10,6 +10,7 @@ from sklearn.pipeline import Pipeline
 
 dataset = openml.datasets.get_dataset(46938)
 df, *_ = dataset.get_data()
+
 y = df['bad_client_target'].map({'Yes': 1, 'No': 0})
 X = df.drop(labels = {'bad_client_target', 'sex', 'phone_operator', 'region', 'family_status', "month"}, axis=1,)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, train_size = 0.8, random_state = 42)
